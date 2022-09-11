@@ -1,0 +1,54 @@
+namespace: monk-vault 
+
+vault: 
+  defines: runnable
+  variables:
+    monk_vault_port:
+      value: 8201
+      type: string
+    monk_image_tag:
+      value: latest
+    monk_vault_addr:
+      env: VAULT_ADDR
+      value: <- `http://localhost:${monk_vault_port}`
+      type: string
+    monk_vault_api_addr:
+      env: VAULT_API_ADDR
+      value: <- `http://0.0.0.0:${monk_vault_port}`
+      type: string
+    monk_skip_setcap:
+      env: SKIP_SETCAP
+      value: true
+    monk_skip_chown:
+      env: SKIP_CHOWN
+      value: true
+  containers:
+    monk-vault:
+      ports:
+        - <- `0.0.0.0:8201:${monk_vault_port}`
+      image: vault
+      # bash: sleep 3600
+      image-tag: <- `${monk_image_tag}`
+  files:
+    config_file:
+      container: monk-vault
+      mode: 0644
+      path: /vault/config/config.json
+      contents: |
+        {
+          "storage": {
+            "file": {
+              "path": "vault/file"
+            }
+          },
+          "listener": {
+            "tcp": {
+              "address": "0.0.0.0:{{ v "monk_vault_port"}}",
+              "tls_disable": true
+            }
+          },
+          "ui": true,
+          "max_lease_ttl": "8760h",
+          "default_lease_ttl": "8760h",
+          "disable_mlock": true
+        }
