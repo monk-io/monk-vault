@@ -77,7 +77,7 @@ The variables are in `vault.yml` file. You can quickly setup by editing the valu
 
 | Variable                     	| Description                               	|
 |------------------------------	|-------------------------------------------	|
-| monk_vault_port               | Jupyter Port, Default: 8888 	               |
+| monk_vault_port               | Vault Port, Default: 8201 	               |
 | monk_image_tag             	| Image tag, Default latest                     	|
 | monk_skip_setcap             	| Set cap                      	|
 | monk_skip_chown             	| set chown                     	|
