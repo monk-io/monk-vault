@@ -83,6 +83,103 @@ The variables are in `vault.yml` file. You can quickly setup by editing the valu
 | monk_skip_chown             	| set chown                     	|
 
 
+## Unlock Vault 
+### unlock
+```bash
+foo@bar:~$ monk monk do templates/local/monk-vault/vault                                                                                                
+✔ Get templates/local/monk-vault/vault actions list success
+? Action unlock
+✔ Got action parameters
+✔ Parse parameters success
+✔ Running action:
++ vault operator init
++ grep 'Unseal Key 1:' /vault/file/keys
++ awk '{print $NF}'
++ vault operator unseal SpVzTV5ltimEtGCjt7sNqKfQMcKe0zZuL6E4Uee3/ly8
+Key                Value
+---                -----
+Seal Type          shamir
+Initialized        true
+Sealed             true
+Total Shares       5
+Threshold          3
+Unseal Progress    1/3
+Unseal Nonce       d950d940-b5a8-ac63-1740-c01ea1c50d54
+Version            1.11.3
+Build Date         2022-08-26T10:27:10Z
+Storage Type       file
+HA Enabled         false
++ grep 'Unseal Key 2:' /vault/file/keys
++ awk '{print $NF}'
++ vault operator unseal MYI4xZqPdWGJDxBOiJCtdyEI1fMOUAFLsh1EIYyz+u29
+Key                Value
+---                -----
+Seal Type          shamir
+Initialized        true
+Sealed             true
+Total Shares       5
+Threshold          3
+Unseal Progress    2/3
+Unseal Nonce       d950d940-b5a8-ac63-1740-c01ea1c50d54
+Version            1.11.3
+Build Date         2022-08-26T10:27:10Z
+Storage Type       file
+HA Enabled         false
++ grep 'Unseal Key 3:' /vault/file/keys
++ awk '{print $NF}'
++ vault operator unseal gJbcnyTGIKMSgdILSyQGZlMNjAk6kpLo6uti7FsMJCZu
+Key             Value
+---             -----
+Seal Type       shamir
+Initialized     true
+Sealed          false
+Total Shares    5
+Threshold       3
+Version         1.11.3
+Build Date      2022-08-26T10:27:10Z
+Storage Type    file
+Cluster Name    vault-cluster-a7624cc2
+Cluster ID      2495d693-5e4f-1756-58f4-09c8bf4adc39
+HA Enabled      false
++ grep 'Initial Root Token:' /vault/file/keys
++ awk '{print $NF}'
++ export 'ROOT_TOKEN=hvs.JEWpADvRspp4go5IFTZ38re8'
++ vault login hvs.JEWpADvRspp4go5IFTZ38re8
+Success! You are now authenticated. The token information displayed below
+is already stored in the token helper. You do NOT need to run "vault login"
+again. Future Vault requests will automatically use this token.
+
+Key                  Value
+---                  -----
+token                hvs.JEWpADvRspp4go5IFTZ38re8
+token_accessor       GhP2MH9YECBFgXMda62IsnMp
+token_duration       ∞
+token_renewable      false
+token_policies       ["root"]
+identity_policies    []
+policies             ["root"]
+✨ Took: 2s
+```
+
+## Show Token Vault 
+### show_token
+```bash
+foo@bar:~$ monk monk do templates/local/monk-vault/vault    
+⠴ Get templates/local/monk-vault/vault actions list starting...
+✔ Get templates/local/monk-vault/vault actions list success
+? Action show_token
+✔ Got action parameters
+✔ Parse parameters success
+✔ Running action:
++ awk '{print $NF}'
++ grep 'Initial Root Token:' /vault/file/keys
++ echo hvs.JEWpADvRspp4go5IFTZ38re8
+hvs.JEWpADvRspp4go5IFTZ38re8
+✨ Took: 2s
+```
+This token value is hvs.JEWpADvRspp4go5IFTZ38re8, we'll use that for login
+
+
 ## Stop, remove and clean up workloads and templates
 
 ```bash

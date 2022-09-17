@@ -18,16 +18,16 @@ vault:
       type: string
     monk_skip_setcap:
       env: SKIP_SETCAP
-      value: true
+      value: false
     monk_skip_chown:
       env: SKIP_CHOWN
-      value: true
+      value: false
   containers:
     monk-vault:
       ports:
         - <- `0.0.0.0:8201:${monk_vault_port}`
       image: vault
-      # bash: sleep 3600
+      bash: vault server --config /vault/config/config.json
       image-tag: <- `${monk_image_tag}`
   files:
     config_file:
@@ -52,3 +52,39 @@ vault:
           "default_lease_ttl": "8760h",
           "disable_mlock": true
         }
+    unlock_file: 
+      container: monk-vault
+      mode: 0775
+      path: /vault/unlock.sh
+      contents: |
+        #!/usr/bin/env sh
+
+        set -ex
+        vault operator init > /vault/file/keys
+        vault operator unseal $(grep 'Unseal Key 1:' /vault/file/keys | awk '{print $NF}')
+        vault operator unseal $(grep 'Unseal Key 2:' /vault/file/keys | awk '{print $NF}')
+        vault operator unseal $(grep 'Unseal Key 3:' /vault/file/keys | awk '{print $NF}')
+        export ROOT_TOKEN=$(grep 'Initial Root Token:' /vault/file/keys | awk '{print $NF}')
+        vault login $ROOT_TOKEN
+        
+        show_token() {
+          print $(grep 'Initial Root Token:' /vault/file/keys | awk '{print $NF}')
+        }
+
+    show_token_file: 
+      container: monk-vault
+      mode: 0775
+      path: /vault/show_token_file.sh
+      contents: |
+        #!/usr/bin/env sh
+        set -ex
+        
+        echo $(grep 'Initial Root Token:' /vault/file/keys | awk '{print $NF}')
+
+  actions:
+    unlock:
+      code: exec("monk-vault", "/bin/sh", "/vault/unlock.sh")
+      description: Vault Unlock Login
+    show_token:
+      code: exec("monk-vault", "/bin/sh", "/vault/show_token_file.sh")
+      description: Vault Show token
