@@ -1,6 +1,13 @@
 namespace: monk-vault 
 
-vault: 
+vault:
+  metadata:
+    defines: metadata
+    name: Vault by HashiCorp
+    description: Vault secures, stores, and tightly controls access to tokens, passwords, certificates, API keys, and other secrets in modern computing.
+    website: https://www.vaultproject.io
+    publisher: monk.io
+    icon: vault-hashicorp.png  
   defines: runnable
   variables:
     monk_vault_port:
