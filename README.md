@@ -1,4 +1,4 @@
-# Tensorflow & Monk
+# Vault & Monk
 This repository contains Monk.io template to deploy Vault either locally or on cloud of your choice (AWS, GCP, Azure, Digital Ocean).
 
 # Prerequisites
