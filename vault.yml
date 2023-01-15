@@ -95,3 +95,8 @@ vault:
     show_token:
       code: exec("monk-vault", "/bin/sh", "/vault/show_token_file.sh")
       description: Vault Show token
+  services:
+    vault-svc:
+      container: monk-vault
+      port: <- `${monk_vault_port}`
+      protocol: tcp

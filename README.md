@@ -183,5 +183,5 @@ This token value is hvs.JEWpADvRspp4go5IFTZ38re8, we'll use that for login
 ## Stop, remove and clean up workloads and templates
 
 ```bash
-monk purge -x -a
+monk purge -a
 ```
