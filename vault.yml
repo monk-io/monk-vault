@@ -1,4 +1,4 @@
-namespace: monk-vault 
+namespace: vault 
 
 vault:
   metadata:
@@ -30,7 +30,7 @@ vault:
       env: SKIP_CHOWN
       value: false
   containers:
-    monk-vault:
+    vault:
       ports:
         - <- `0.0.0.0:8201:${monk_vault_port}`
       image: vault
@@ -38,7 +38,7 @@ vault:
       image-tag: <- `${monk_image_tag}`
   files:
     config_file:
-      container: monk-vault
+      container: vault
       mode: 0644
       path: /vault/config/config.json
       contents: |
@@ -60,7 +60,7 @@ vault:
           "disable_mlock": true
         }
     unlock_file: 
-      container: monk-vault
+      container: vault
       mode: 0775
       path: /vault/unlock.sh
       contents: |
@@ -79,7 +79,7 @@ vault:
         }
 
     show_token_file: 
-      container: monk-vault
+      container: vault
       mode: 0775
       path: /vault/show_token_file.sh
       contents: |
@@ -90,13 +90,13 @@ vault:
 
   actions:
     unlock:
-      code: exec("monk-vault", "/bin/sh", "/vault/unlock.sh")
+      code: exec("vault", "/bin/sh", "/vault/unlock.sh")
       description: Vault Unlock Login
     show_token:
-      code: exec("monk-vault", "/bin/sh", "/vault/show_token_file.sh")
+      code: exec("vault", "/bin/sh", "/vault/show_token_file.sh")
       description: Vault Show token
   services:
     vault-svc:
-      container: monk-vault
+      container: vault
       port: <- `${monk_vault_port}`
       protocol: tcp

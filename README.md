@@ -17,52 +17,52 @@ not connected to cluster
 
 ## Clone Repository
 ```bash
-git clone https://github.com/monk-io/monk-vault
+git clone https://github.com/monk-io/vault
 ```
 
 ## Load Template
 ```bash
-cd monk-vault
+cd vault
 monk load MANIFEST
 ```
 
 
 #### Let's take a look at the themes I have installed.
 ```bash
-foo@bar:~$ monk list monk-vault
+foo@bar:~$ monk list vault
 ✔ Got the list
 Type      Template          Repository  Version  Tags
-runnable  monk-vault/vault  local       -        -
+runnable  vault/vault  local       -        -
 
 ```
 
 ## Deploy Stack
 ```bash
-foo@bar:~$ monk run monk-vault/vault
-? Select tag to run [local/monk-vault/vault] on: mnk
-✔ Starting the job: local/monk-vault/vault... DONE
+foo@bar:~$ monk run vault/vault
+? Select tag to run [local/vault/vault] on: mnk
+✔ Starting the job: local/vault/vault... DONE
 ✔ Preparing nodes DONE
 ✔ Checking/pulling images...
 ✔ [================================================] 100% vault:latest mnk-1
 ✔ Checking/pulling images DONE
-✔ Started local/monk-vault/vault
+✔ Started local/vault/vault
 
-🔩 templates/local/monk-vault/vault
+🔩 templates/local/vault/vault
  └─🧊 Peer mnk-1
-    └─🔩 templates/local/monk-vault/vault
-       └─📦 74a4ab0f23148a6308353df53d2bd468-al-monk-vault-vault-monk-vault
+    └─🔩 templates/local/vault/vault
+       └─📦 74a4ab0f23148a6308353df53d2bd468-al-vault-vault-vault
           ├─🧩 vault:latest
           └─🔌 open 16.171.45.206:8201 (0.0.0.0:8201) -> 8201
 
 💡 You can inspect and manage your above stack with these commands:
-        monk logs (-f) local/monk-vault/vault - Inspect logs
-        monk shell     local/monk-vault/vault - Connect to the container's shell
-        monk do        local/monk-vault/vault/action_name - Run defined action (if exists)
+        monk logs (-f) local/vault/vault - Inspect logs
+        monk shell     local/vault/vault - Connect to the container's shell
+        monk do        local/vault/vault/action_name - Run defined action (if exists)
 💡 Check monk help for more!
 ```
 ## Show Root Token
 ```bash
-foo@bar:~$ monk logs 74a4ab0f23148a6308353df53d2bd468-al-monk-vault-vault-monk-vault
+foo@bar:~$ monk logs 74a4ab0f23148a6308353df53d2bd468-al-vault-vault-vault
 .....
 .....
 Unseal Key: 2aI4xUumrgaIJrCI8HBDbj1qGgYgXFa9kPcRenu6e6A=
@@ -86,8 +86,8 @@ The variables are in `vault.yml` file. You can quickly setup by editing the valu
 ## Unlock Vault 
 ### unlock
 ```bash
-foo@bar:~$ monk monk do templates/local/monk-vault/vault                                                                                                
-✔ Get templates/local/monk-vault/vault actions list success
+foo@bar:~$ monk monk do templates/local/vault/vault                                                                                                
+✔ Get templates/local/vault/vault actions list success
 ? Action unlock
 ✔ Got action parameters
 ✔ Parse parameters success
@@ -164,9 +164,9 @@ policies             ["root"]
 ## Show Token Vault 
 ### show_token
 ```bash
-foo@bar:~$ monk monk do templates/local/monk-vault/vault    
-⠴ Get templates/local/monk-vault/vault actions list starting...
-✔ Get templates/local/monk-vault/vault actions list success
+foo@bar:~$ monk do templates/local/vault/vault    
+⠴ Get templates/local/vault/vault actions list starting...
+✔ Get templates/local/vault/vault actions list success
 ? Action show_token
 ✔ Got action parameters
 ✔ Parse parameters success
