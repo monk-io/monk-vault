@@ -1,13 +1,16 @@
 # Vault & Monk
+
 This repository contains Monk.io template to deploy Vault either locally or on cloud of your choice (AWS, GCP, Azure, Digital Ocean).
 
 # Prerequisites
+
 - [Install Monk](https://docs.monk.io/docs/get-monk)
 - [Register and Login Monk](https://docs.monk.io/docs/acc-and-auth)
 - [Add Cloud Provider](https://docs.monk.io/docs/cloud-provider)
 - [Add Instance](https://docs.monk.io/docs/multi-cloud)
 
 #### Make sure monkd is running.
+
 ```bash
 foo@bar:~$ monk status
 daemon: ready
@@ -16,18 +19,20 @@ not connected to cluster
 ```
 
 ## Clone Repository
+
 ```bash
 git clone https://github.com/monk-io/vault
 ```
 
 ## Load Template
+
 ```bash
 cd vault
 monk load MANIFEST
 ```
 
-
 #### Let's take a look at the themes I have installed.
+
 ```bash
 foo@bar:~$ monk list vault
 ✔ Got the list
@@ -37,6 +42,7 @@ runnable  vault/vault  local       -        -
 ```
 
 ## Deploy Stack
+
 ```bash
 foo@bar:~$ monk run vault/vault
 ? Select tag to run [local/vault/vault] on: mnk
@@ -60,7 +66,9 @@ foo@bar:~$ monk run vault/vault
         monk do        local/vault/vault/action_name - Run defined action (if exists)
 💡 Check monk help for more!
 ```
+
 ## Show Root Token
+
 ```bash
 foo@bar:~$ monk logs 74a4ab0f23148a6308353df53d2bd468-al-vault-vault-vault
 .....
@@ -73,6 +81,7 @@ Root Token: hvs.7DO7Sf7C92NL7BTCalm9Nu4Y
 ```
 
 ## Variables
+
 The variables are in `vault.yml` file. You can quickly setup by editing the values here.
 
 | Variable                     	| Description                               	|
@@ -82,9 +91,10 @@ The variables are in `vault.yml` file. You can quickly setup by editing the valu
 | monk_skip_setcap             	| Set cap                      	|
 | monk_skip_chown             	| set chown                     	|
 
+## Unlock Vault
 
-## Unlock Vault 
 ### unlock
+
 ```bash
 foo@bar:~$ monk monk do templates/local/vault/vault                                                                                                
 ✔ Get templates/local/vault/vault actions list success
@@ -161,8 +171,10 @@ policies             ["root"]
 ✨ Took: 2s
 ```
 
-## Show Token Vault 
+## Show Token Vault
+
 ### show_token
+
 ```bash
 foo@bar:~$ monk do templates/local/vault/vault    
 ⠴ Get templates/local/vault/vault actions list starting...
@@ -177,8 +189,8 @@ foo@bar:~$ monk do templates/local/vault/vault
 hvs.JEWpADvRspp4go5IFTZ38re8
 ✨ Took: 2s
 ```
-This token value is hvs.JEWpADvRspp4go5IFTZ38re8, we'll use that for login
 
+This token value is hvs.JEWpADvRspp4go5IFTZ38re8, we'll use that for login
 
 ## Stop, remove and clean up workloads and templates
 

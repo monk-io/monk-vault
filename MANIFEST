@@ -1,2 +1,2 @@
-repo vault
-LOAD vault.yml 
+REPO vault
+LOAD vault.yml

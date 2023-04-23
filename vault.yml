@@ -1,14 +1,23 @@
-namespace: vault 
+---
+namespace: vault
 
 vault:
+  defines: runnable
   metadata:
-    defines: metadata
-    name: Vault by HashiCorp
-    description: Vault secures, stores, and tightly controls access to tokens, passwords, certificates, API keys, and other secrets in modern computing.
+    name: Vault
+    shortname: Vault
+    description: |
+      HashiCorp Vault is a highly secure and scalable secrets management solution that enables organizations to store, manage, and control access to sensitive data such as passwords, API keys, and certificates.
+
+      It provides a centralized platform for managing secrets across multiple environments and applications, with robust access control policies and auditing capabilities. Vault offers a variety of authentication  methods, including LDAP, Active Directory, and multi-factor authentication, to ensure that only authorized users can access sensitive data.
+
+      It also supports dynamic secrets, which are generated on-demand and automatically revoked after a specified time period, further enhancing security. With its flexible architecture and extensive API, Vault can be easily integrated into existing workflows and toolchains, making it
+      an essential tool for modern DevOps teams.
     website: https://www.vaultproject.io
     publisher: monk.io
-    icon: vault-hashicorp.png  
-  defines: runnable
+    source: https://github.com/hashicorp/vault
+    tags: Security,Encryption,Authentication,Authorization,Secrets,Key management,Access control,Compliance,Identity management
+    icon: https://www.hashicorp.com/_next/static/media/colorwhite.c5723175.svg
   variables:
     monk_vault_port:
       value: 8201
@@ -34,8 +43,8 @@ vault:
       ports:
         - <- `0.0.0.0:8201:${monk_vault_port}`
       image: vault
-      bash: vault server --config /vault/config/config.json
       image-tag: <- `${monk_image_tag}`
+      bash: vault server --config /vault/config/config.json
   files:
     config_file:
       container: vault
@@ -59,13 +68,12 @@ vault:
           "default_lease_ttl": "8760h",
           "disable_mlock": true
         }
-    unlock_file: 
+    unlock_file:
       container: vault
       mode: 0775
       path: /vault/unlock.sh
       contents: |
         #!/usr/bin/env sh
-
         set -ex
         vault operator init > /vault/file/keys
         vault operator unseal $(grep 'Unseal Key 1:' /vault/file/keys | awk '{print $NF}')
@@ -73,21 +81,17 @@ vault:
         vault operator unseal $(grep 'Unseal Key 3:' /vault/file/keys | awk '{print $NF}')
         export ROOT_TOKEN=$(grep 'Initial Root Token:' /vault/file/keys | awk '{print $NF}')
         vault login $ROOT_TOKEN
-        
         show_token() {
           print $(grep 'Initial Root Token:' /vault/file/keys | awk '{print $NF}')
         }
-
-    show_token_file: 
+    show_token_file:
       container: vault
       mode: 0775
       path: /vault/show_token_file.sh
       contents: |
         #!/usr/bin/env sh
         set -ex
-        
         echo $(grep 'Initial Root Token:' /vault/file/keys | awk '{print $NF}')
-
   actions:
     unlock:
       code: exec("vault", "/bin/sh", "/vault/unlock.sh")
