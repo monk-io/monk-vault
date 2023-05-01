@@ -16,7 +16,7 @@ vault:
     website: https://www.vaultproject.io
     publisher: monk.io
     source: https://github.com/hashicorp/vault
-    tags: Security,Encryption,Authentication,Authorization,Secrets,Key management,Access control,Compliance,Identity management
+    tags: Druid,Kafka,Database,Analytics,Streaming,Real-Time,Real Time,Apache,Open Source
     icon: https://www.hashicorp.com/_next/static/media/colorwhite.c5723175.svg
   variables:
     monk_vault_port:
@@ -40,8 +40,6 @@ vault:
       value: false
   containers:
     vault:
-      ports:
-        - <- `0.0.0.0:8201:${monk_vault_port}`
       image: vault
       image-tag: <- `${monk_image_tag}`
       bash: vault server --config /vault/config/config.json
@@ -104,3 +102,4 @@ vault:
       container: vault
       port: <- `${monk_vault_port}`
       protocol: tcp
+      host-port: <- `${monk_vault_port}`
