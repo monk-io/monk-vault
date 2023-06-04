@@ -2,14 +2,14 @@
 
 This repository contains Monk.io template to deploy Vault either locally or on cloud of your choice (AWS, GCP, Azure, Digital Ocean).
 
-# Prerequisites
+## Prerequisites
 
 - [Install Monk](https://docs.monk.io/docs/get-monk)
 - [Register and Login Monk](https://docs.monk.io/docs/acc-and-auth)
 - [Add Cloud Provider](https://docs.monk.io/docs/cloud-provider)
 - [Add Instance](https://docs.monk.io/docs/multi-cloud)
 
-#### Make sure monkd is running.
+## Make sure monkd is running
 
 ```bash
 foo@bar:~$ monk status
@@ -30,8 +30,6 @@ git clone https://github.com/monk-io/vault
 cd vault
 monk load MANIFEST
 ```
-
-#### Let's take a look at the themes I have installed.
 
 ```bash
 foo@bar:~$ monk list vault
@@ -84,19 +82,19 @@ Root Token: hvs.7DO7Sf7C92NL7BTCalm9Nu4Y
 
 The variables are in `vault.yml` file. You can quickly setup by editing the values here.
 
-| Variable                     	| Description                               	|
-|------------------------------	|-------------------------------------------	|
-| monk_vault_port               | Vault Port, Default: 8201 	               |
-| monk_image_tag             	| Image tag, Default latest                     	|
-| monk_skip_setcap             	| Set cap                      	|
-| monk_skip_chown             	| set chown                     	|
+| Variable         | Description               |
+| ---------------- | ------------------------- |
+| monk_vault_port  | Vault Port, Default: 8201 |
+| monk_image_tag   | Image tag, Default latest |
+| monk_skip_setcap | Set cap                   |
+| monk_skip_chown  | set chown                 |
 
 ## Unlock Vault
 
 ### unlock
 
 ```bash
-foo@bar:~$ monk monk do templates/local/vault/vault                                                                                                
+foo@bar:~$ monk monk do templates/local/vault/vault
 ✔ Get templates/local/vault/vault actions list success
 ? Action unlock
 ✔ Got action parameters
@@ -176,7 +174,7 @@ policies             ["root"]
 ### show_token
 
 ```bash
-foo@bar:~$ monk do templates/local/vault/vault    
+foo@bar:~$ monk do templates/local/vault/vault
 ⠴ Get templates/local/vault/vault actions list starting...
 ✔ Get templates/local/vault/vault actions list success
 ? Action show_token
