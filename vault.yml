@@ -23,7 +23,7 @@ vault:
       value: 8201
     monk_image_tag:
       type: string
-      value: latest
+      value: "1.13.3"
     monk_vault_addr:
       env: VAULT_ADDR
       value: <- `http://localhost:${monk_vault_port}`
