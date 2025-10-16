@@ -1,0 +1,173 @@
+---
+title: HashiCorp Vault
+description: Ready-to-run HashiCorp Vault container template you can run directly or inherit to integrate secrets management and encryption into your infrastructure.
+primary_category: security
+tags: [vault, secrets, security, template, runnable, encryption, hashicorp, iam]
+integration_type: template
+hosting_models: [self-hosted]
+website_url: https://www.vaultproject.io/
+docs_url: https://www.vaultproject.io/docs
+publisher: monk.io
+---
+
+## Overview
+
+This template provides a production‑ready HashiCorp Vault instance as a Monk runnable. You can:
+
+- Run it directly to get a managed Vault server with sensible defaults
+- Inherit it in your own runnable to seamlessly add secrets management and encryption to your stack
+
+HashiCorp Vault secures, stores, and tightly controls access to tokens, passwords, certificates, API keys, and other secrets. It provides encryption as a service, identity-based access, dynamic secrets, and detailed audit logs.
+
+## What this template manages
+
+- Vault server container (`vault` image, configurable tag)
+- Network service on port 8200 (HTTP API)
+- Persistent storage for secrets and configuration
+- Seal/unseal management
+- Authentication and authorization
+
+## Quick start (run directly)
+
+1) Load templates
+
+```bash
+monk load MANIFEST
+```
+
+2) Run Vault with defaults
+
+```bash
+monk run vault/vault
+```
+
+3) Initialize and unseal Vault (first time only)
+
+```bash
+# Initialize Vault
+vault operator init
+
+# Unseal Vault (requires 3 unseal keys by default)
+vault operator unseal <unseal-key-1>
+vault operator unseal <unseal-key-2>
+vault operator unseal <unseal-key-3>
+```
+
+4) Customize configuration (recommended via inheritance)
+
+Running directly uses the defaults defined in this template's `variables`. Secrets added with `monk secrets add` will not affect this runnable unless you inherit it and reference those secrets.
+
+- Preferred: inherit and replace variables with `secret("...")` as shown below.
+- Alternative: fork/clone and edit the `variables` in `vault/vault.yaml`, then `monk load MANIFEST` and run.
+
+Once started and unsealed, access Vault at `http://localhost:8200`.
+
+**Important**: Save the initial root token and unseal keys securely!
+
+## Configuration
+
+Key variables you can customize in this template:
+
+```yaml
+variables:
+  vault-image-tag: "latest"              # container image tag
+  vault-port: "8200"                     # HTTP API port
+  vault-address: "http://0.0.0.0:8200"  # Vault server address
+  vault-dev-mode: "false"                # dev mode (auto-unsealed, in-memory)
+  vault-log-level: "info"                # log level (trace, debug, info, warn, error)
+```
+
+Data is persisted under `${monk-volume-path}/vault` on the host. For production, use persistent storage and configure auto-unseal with cloud KMS.
+
+## Use by inheritance (recommended for apps)
+
+Inherit the Vault runnable in your application and declare a connection. Example:
+
+```yaml
+namespace: myapp
+secrets:
+  defines: runnable
+  inherits: vault/vault
+api:
+  defines: runnable
+  containers:
+    api:
+      image: myorg/api
+  connections:
+    vault:
+      runnable: secrets
+      service: vault
+  variables:
+    vault-host:
+      value: <- connection-hostname("vault")
+    vault-token:
+      value: <- secret("vault-token")
+    vault-address:
+      value: <- `http://${connection-hostname("vault")}:8200`
+```
+
+Then set the secrets once and run your app group:
+
+```bash
+monk secrets add -g vault-token="<your-vault-root-token>"
+monk run myapp/api
+```
+
+## Ports and connectivity
+
+- Service: `vault` on TCP port `8200`
+- From other runnables in the same process group, use `connection-hostname("<connection-name>")` to resolve the Vault host.
+
+## Persistence and configuration
+
+- Data path: `${monk-volume-path}/vault/file:/vault/file`
+- Config path: `${monk-volume-path}/vault/config:/vault/config`
+- Vault stores encrypted secrets in the configured storage backend
+
+## Seal/Unseal
+
+Vault starts in a **sealed** state for security:
+- **Sealed**: Vault cannot decrypt data, all API operations return 503
+- **Unsealed**: Vault can decrypt and access secrets
+
+To unseal Vault (required after restart):
+```bash
+vault operator unseal <key-1>
+vault operator unseal <key-2>
+vault operator unseal <key-3>
+```
+
+For production, use **auto-unseal** with cloud KMS (AWS KMS, GCP Cloud KMS, Azure Key Vault).
+
+## Features
+
+- Secrets management (static and dynamic secrets)
+- Encryption as a service
+- Identity-based access with multiple auth methods
+- Dynamic secrets (databases, cloud providers, etc.)
+- Key rolling and rotation
+- Detailed audit logging
+- PKI certificate management
+- Secrets leasing and renewal
+
+## Related templates
+
+- See other templates in this repository for complementary services
+- Combine with monitoring tools for observability
+- Integrate with your application stack as needed
+
+## Troubleshooting
+
+- If Vault is sealed, unseal it before use. Check status:
+
+```bash
+vault status
+```
+
+- For production, never use dev mode (`vault-dev-mode: "true"`)
+- Always secure the root token and unseal keys
+- Check logs:
+
+```bash
+monk logs -l 500 -f vault/vault
+```
